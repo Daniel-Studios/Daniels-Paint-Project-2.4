@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"> 
+    <head> 
+        <meta charset="UTF-8"/>
+        <meta name="author" content="Daniel Shively Jr"/>
+        <title class="title" id="title" placeholder="🎨Daniel's Paint Project 2.4🎨" value="🎨Daniel's Paint Project 2.4🎨">🎨Daniel's Paint Project 2.4🎨</title>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, shrink-to-fit=no"/>
+        <meta name="mobile-web-app-capable" content="yes"/> 
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css"/>
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/monolith.min.css"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/firebasejs/7.22.1/firebase.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Amatic+SC&amp;display=swap" rel="stylesheet"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+        <script src="dist/pickr.es5.min.js"></script>
+        <script src="dist/pickr.min.js"></script>
+        <script src="style.css"></script>
+        <script src="script.js"></script>
+    </head>
+    <body>
+    <div id="loader"><div id="loader-logo"><span class="material-icons" style="font-size:100px;padding:0;">brush</span></div></div>
+    <div id="main">
+    <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+        </div>
+        <div id="tools" type="tools" role="tools">
+        <button id="selectColor" type="color" role="color"><div id="c-border" type="color" role="color"></div></button>
+            <button id="selectPen"><span class="material-icons">brush</span></button>
+            <button id="selectEraser"><div id="eraser-svg"></div></button>
+            <button id="clear" @click=clearAll :class='{"btn-secondary": isClearLine}'><span class="material-icons">delete</span></button>
+            <a id="link" target="_blank"><button id="settings"><span class="material-icons">settings</span></button></a>
+        </div>
+        <div id="options">
+            <div id="strokePreviewContainer"><div id="stroke-preview"></div></div>
+            <div id="strokeSliderContainer">
+            <input class="mdl-slider mdl-js-slider" id="strokeSlider" type="range" step="1" min="1" max="50" value="5" tabindex="0">
+            </div>
+        </div>
+        </div>
+        <script src="script.js.1" rel="javascript" type="text/javascript" role="text/javascript">
+//Running main Function
+main();
+//Adding Event Listeners
+canvas.addEventListener('touchmove',handleTouchMove);
+canvas.addEventListener('touchstart',handleTouchStart);
+canvas.addEventListener('mousemove',handleMouseMove);
+canvas.addEventListener('mouseup',handleMouseUp);
+canvas.addEventListener('mousedown',handleMouseDown);
+document.getElementById("selectColor").addEventListener("click",()=>{setColor()});
+document.getElementById("selectPen").addEventListener("click",()=>{changeTool("pen")});
+document.getElementById("selectEraser").addEventListener("click",()=>{changeTool("eraser")});
+document.getElementById("clear").addEventListener("click",()=>{clear()});
+document.getElementById("settings").addEventListener("click",()=>{toggleOptions()});
+document.getElementById("strokeSlider").addEventListener("input",()=>{setStroke()});
+
+
+// Simple example, see optional options for more configuration.
+const pickr = Pickr.create({
+    el: '#selectColor',
+    container: 'body',
+    theme: 'nano',
+    closeOnScroll: false,
+    appClass: 'custom-class',
+    useAsButton: false,
+    padding: 8,
+    inline: false,
+    autoReposition: true,
+    sliders: 'hh',
+    disabled: false,
+    enabled: true,
+    lockOpacity: false,
+    outputPrecision: 0,
+    comparison: true,
+    default: '#000000',
+    swatches: [
+        '#000000',
+        '#42445A',
+        '#0000FF',
+        '#F44336',
+        '#E91E63',
+        '#9C27B0',
+        '#673AB7'
+    ],
+    defaultRepresentation: 'HEX',
+    showAlways: false,
+    hideAlways: true,
+    closeWithKey: 'Escape',
+    openWithKey: 'Enter',
+    position: 'bottom-middle',
+    adjustableNumbers: true,
+        
+        components: {
+            palette: true,
+            preview: true,
+            opacity: true,
+            hue: true,
+        
+        interaction: {
+            hex: true,
+            rgba: true,
+            hsla: true,
+            hsva: true,
+            cmyk: true,
+            input: true,
+        },
+    },
+    i18n: {
+       
+       'ui:dialog': 'color picker dialog',
+       'btn:toggle': 'toggle color picker dialog',
+       'btn:swatch': 'color swatch',
+       'btn:last-color': 'use previous color',
+       
+       'aria:ui:dialog': 'Dialog',
+       'aria:btn:toggle': 'Toggle',
+       'aria:btn:swatch': 'Swatch',
+       'aria:btn:last-color': 'Previous Color',
+       'aria:input': 'color input field',
+       'aria:palette': 'color selection area',
+       'aria:hue': 'hue selection slider',
+       'aria:opacity': 'selection slider'
+    }
+});
+
+pickr.on('init', instance => {
+    console.log('init', instance);
+    init=start
+    start=init
+});
+
+pickr.on('hide', instance => {
+    console.log('hide', instance);
+    hide=close
+    close=hide
+});
+
+pickr.on('show', (color, instance) => {
+    console.log('show', color, instance);
+    show=open
+    open=show
+});
+
+pickr.on('change', (color, instance) => {
+    console.log('change', color, instance);
+    setColor(`${color.toHEXA()}`)
+    pickr.applyColor(true)
+    change=select
+    select=change
+});
+        </script>
+        <script src="script.js.2" rel="javascript" type="text/javascript" role="text/javascript">
+var canvas,ctx;alert("please upvote if you liked \n This is my first try with html canvas Hope you will like it!");;var settings={currentTool:"pen",backgroundColor:"white",width:5,pen:{name:"pen",color:"black",lineCap:"round",lineJoin:"round"},eraser:{name:"eraser",color:"white",lineCap:"round",lineJoin:"round"}};let cord={x:0,y:0};var isPainting=!1;function main(){document.getElementById("loader").style.animation="fade .3s linear 1s",setTimeout(()=>{document.getElementById("loader").style.display="none"},1300),canvas=document.getElementById("canvas"),resizeCanvas(),(ctx=canvas.getContext("2d")).lineJoin="round",document.getElementById("c-border").style.backgroundColor=settings.pen.color}function getPosition(e){cord.x=e.clientX-canvas.offsetLeft,cord.y=e.clientY-canvas.offsetTop}function resizeCanvas(){canvas.width=document.getElementById("canvas-container").clientWidth,canvas.height=document.getElementById("canvas-container").clientHeight}function clear(){ctx.clearRect(0,0,canvas.width,canvas.height)}function changeTool(e){"pen"==e&&(canvas.style.cursor="crosshair",document.getElementById("selectPen").style.backgroundColor="#ccc",document.getElementById("selectEraser").style.backgroundColor="#fff"),"eraser"==e&&(canvas.style.cursor="eraser",document.getElementById("selectEraser").style.backgroundColor="#ccc",document.getElementById("selectPen").style.backgroundColor="#fff"),settings.currentTool=e}function currentTool(){return settings[settings.currentTool]}function setValue(e,t){return settings[settings.currentTool][e]=t}function setColor(e){settings.pen.color=e}function setStroke(){var e=document.getElementById("strokeSlider"),t=document.getElementById("stroke-preview");t.style.width=e.value+"px",t.style.height=e.value+"px",settings.width=e.value}function openSettings(){var e=document.getElementById("options");e.style.animation="goUp .2s ease-in ",setTimeout(()=>{e.style.bottom="70px",e.style.zIndex="123",e.style.opacity="1"},200)}function closeSettings(){var e=document.getElementById("options");e.style.animation="goDown .2s ease-out ",setTimeout(()=>{e.style.bottom="-50px",e.style.zIndex="5",e.style.opacity="0"},200)}setTimeout(()=>{"pen"==settings.currentTool&&(canvas.style.cursor="crosshair",document.getElementById("selectPen").style.backgroundColor="#ccc",document.getElementById("selectEraser").style.backgroundColor="#fff"),"pen"!=settings.currentTool&&(canvas.style.cursor="eraser",document.getElementById("selectEraser").style.backgroundColor="#ccc",document.getElementById("selectPen").style.backgroundColor="#fff")},10);var isSettOpen=!1;function toggleOptions(){isSettOpen?(closeSettings(),isSettOpen=!1):(openSettings(),isSettOpen=!0)}function handleTouchMove(e){var t,n;t=e.touches[0].clientX,n=e.touches[0].clientY,ctx.lineTo(t,n),ctx.strokeStyle=currentTool().color,ctx.lineWidth=settings.width,ctx.lineCap=currentTool().lineCap,ctx.stroke()}function handleTouchStart(e){var t,n;t=e.touches[0].clientX,n=e.touches[0].clientY,ctx.beginPath(),ctx.lineTo(t,n),ctx.strokeStyle=currentTool().color,ctx.lineWidth=settings.width,ctx.lineCap=currentTool().lineCap,ctx.stroke()}function handleMouseMove(e){isPainting&&(ctx.beginPath(),ctx.strokeStyle=currentTool().color,ctx.lineWidth=settings.width,ctx.lineCap=currentTool().lineCap,ctx.moveTo(cord.x,cord.y),getPosition(e),ctx.lineTo(cord.x,cord.y),ctx.stroke())}function handleMouseDown(e){isPainting=!0,getPosition(e)}function handleMouseUp(e){isPainting=!1}
+        </script>
+        <script src="script.js.3" rel="javascript" type="text/javascript" role="text/javascript">
+$ npm install @simonwep/pickr
+$ yarn add @simonwep/pickrA
+
+// One of the following themes
+import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
+import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
+import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
+
+// Modern or es5 bundle (pay attention to the note below!)
+import Pickr from '@simonwep/pickr';
+import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
+        </script>
+    </body>
+</html>
