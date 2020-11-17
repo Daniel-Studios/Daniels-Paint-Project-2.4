@@ -1,0 +1,109 @@
+//Running main Function
+main();
+//Adding Event Listeners
+canvas.addEventListener('touchmove',handleTouchMove);
+canvas.addEventListener('touchstart',handleTouchStart);
+canvas.addEventListener('mousemove',handleMouseMove);
+canvas.addEventListener('mouseup',handleMouseUp);
+canvas.addEventListener('mousedown',handleMouseDown);
+document.getElementById("selectColor").addEventListener("click",()=>{setColor()});
+document.getElementById("selectPen").addEventListener("click",()=>{changeTool("pen")});
+document.getElementById("selectEraser").addEventListener("click",()=>{changeTool("eraser")});
+document.getElementById("clear").addEventListener("click",()=>{clear()});
+document.getElementById("settings").addEventListener("click",()=>{toggleOptions()});
+document.getElementById("strokeSlider").addEventListener("input",()=>{setStroke()});
+
+
+// Simple example, see optional options for more configuration.
+const pickr = Pickr.create({
+    el: '#selectColor',
+    container: 'body',
+    theme: 'nano',
+    closeOnScroll: false,
+    appClass: 'custom-class',
+    useAsButton: false,
+    padding: 8,
+    inline: false,
+    autoReposition: true,
+    sliders: 'hh',
+    disabled: false,
+    enabled: true,
+    lockOpacity: false,
+    outputPrecision: 0,
+    comparison: true,
+    default: '#000000',
+    swatches: [
+        '#000000',
+        '#42445A',
+        '#0000FF',
+        '#F44336',
+        '#E91E63',
+        '#9C27B0',
+        '#673AB7'
+    ],
+    defaultRepresentation: 'HEX',
+    showAlways: false,
+    hideAlways: true,
+    closeWithKey: 'Escape',
+    openWithKey: 'Enter',
+    position: 'bottom-middle',
+    adjustableNumbers: true,
+        
+        components: {
+            palette: true,
+            preview: true,
+            opacity: true,
+            hue: true,
+        
+        interaction: {
+            hex: true,
+            rgba: true,
+            hsla: true,
+            hsva: true,
+            cmyk: true,
+            input: true,
+        },
+    },
+    i18n: {
+       
+       'ui:dialog': 'color picker dialog',
+       'btn:toggle': 'toggle color picker dialog',
+       'btn:swatch': 'color swatch',
+       'btn:last-color': 'use previous color',
+       
+       'aria:ui:dialog': 'Dialog',
+       'aria:btn:toggle': 'Toggle',
+       'aria:btn:swatch': 'Swatch',
+       'aria:btn:last-color': 'Previous Color',
+       'aria:input': 'color input field',
+       'aria:palette': 'color selection area',
+       'aria:hue': 'hue selection slider',
+       'aria:opacity': 'selection slider'
+    }
+});
+
+pickr.on('init', instance => {
+    console.log('init', instance);
+    init=start
+    start=init
+});
+
+pickr.on('hide', instance => {
+    console.log('hide', instance);
+    hide=close
+    close=hide
+});
+
+pickr.on('show', (color, instance) => {
+    console.log('show', color, instance);
+    show=open
+    open=show
+});
+
+pickr.on('change', (color, instance) => {
+    console.log('change', color, instance);
+    setColor(`${color.toHEXA()}`)
+    pickr.applyColor(true)
+    change=select
+    select=change
+});
