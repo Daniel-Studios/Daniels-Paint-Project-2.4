@@ -3,6 +3,11 @@ body {
     margin:0;
     overflow:hidden;
     height:100vh;
+    height:100vh;
+}
+html {
+    height:100%;
+    width:100%;
 }
 *::selection {
     background: transparent;
